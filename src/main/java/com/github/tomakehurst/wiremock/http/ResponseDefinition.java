@@ -50,6 +50,7 @@ public class ResponseDefinition {
 	private boolean wasConfigured = true;
 	private Request originalRequest;
 	private List<String> transformers;
+	private DelayDistribution delayDistribution;
 
 	public static ResponseDefinition copyOf(ResponseDefinition original) {
 	    ResponseDefinition newResponseDef = new ResponseDefinition();
@@ -63,7 +64,8 @@ public class ResponseDefinition {
 	    newResponseDef.proxyBaseUrl = original.proxyBaseUrl;
 	    newResponseDef.fault = original.fault;
 	    newResponseDef.wasConfigured = original.wasConfigured;
-		newResponseDef.transformers = original.transformers;
+	    newResponseDef.transformers = original.transformers;
+	    newResponseDef.delayDistribution = original.delayDistribution;
 	    return newResponseDef;
 	}
 	
@@ -186,6 +188,10 @@ public class ResponseDefinition {
 	    this.fixedDelayMilliseconds = fixedDelayMilliseconds;
 	}
 
+	public void setDelayDistribution(DelayDistribution delayDistribution) {
+	    this.delayDistribution = delayDistribution;
+	}
+
 	public String getBodyFileName() {
 		return bodyFileName;
 	}
@@ -201,6 +207,10 @@ public class ResponseDefinition {
     public Integer getFixedDelayMilliseconds() {
         return fixedDelayMilliseconds;
     }
+
+	public DelayDistribution getDelayDistribution() {
+	    return delayDistribution;
+	}
     
     @JsonIgnore
     public String getProxyUrl() {
@@ -337,4 +347,5 @@ public class ResponseDefinition {
 	public String toString() {
 		return Json.write(this);
 	}
+
 }

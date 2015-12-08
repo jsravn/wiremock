@@ -20,6 +20,8 @@ import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.global.GlobalSettingsHolder;
 import com.google.common.base.Optional;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.github.tomakehurst.wiremock.http.Response.response;
 
 public class StubResponseRenderer implements ResponseRenderer {
@@ -43,6 +45,8 @@ public class StubResponseRenderer implements ResponseRenderer {
 		}
 		
 		addDelayIfSpecifiedGloballyOrIn(responseDefinition);
+		addRandomDelayIn(responseDefinition);
+
 		if (responseDefinition.isProxyResponse()) {
 	    	return proxyResponseRenderer.render(responseDefinition);
 	    } else {
@@ -87,5 +91,16 @@ public class StubResponseRenderer implements ResponseRenderer {
     			globalSettingsHolder.get().getFixedDelay();
     	
     	return Optional.fromNullable(delay);
+    }
+
+    private void addRandomDelayIn(ResponseDefinition response) {
+        if (response.getDelayDistribution() == null) return;
+
+        long delay = response.getDelayDistribution().sampleMillis();
+        try {
+           TimeUnit.MILLISECONDS.sleep(delay);
+        } catch (InterruptedException e) {
+           Thread.currentThread().interrupt();
+        }
     }
 }

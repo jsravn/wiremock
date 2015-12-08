@@ -16,6 +16,7 @@
 package com.github.tomakehurst.wiremock.client;
 
 import com.github.tomakehurst.wiremock.common.Json;
+import com.github.tomakehurst.wiremock.http.DelayDistribution;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.http.HttpHeader;
 import com.github.tomakehurst.wiremock.http.HttpHeaders;
@@ -38,6 +39,7 @@ public class ResponseDefinitionBuilder {
 	protected String bodyFileName;
 	protected List<HttpHeader> headers = newArrayList();
 	protected Integer fixedDelayMilliseconds;
+	protected DelayDistribution delayDistribution;
 	protected String proxyBaseUrl;
 	protected Fault fault;
 	protected List<String> responseTransformerNames;
@@ -101,6 +103,11 @@ public class ResponseDefinitionBuilder {
         this.fixedDelayMilliseconds = milliseconds;
         return this;
     }
+
+	public ResponseDefinitionBuilder withRandomDelay(DelayDistribution distribution) {
+		this.delayDistribution = distribution;
+		return this;
+	}
 
 	public ResponseDefinitionBuilder withTransformers(String... responseTransformerNames) {
 		this.responseTransformerNames = asList(responseTransformerNames);
@@ -169,6 +176,7 @@ public class ResponseDefinitionBuilder {
 		
         response.setBodyFileName(bodyFileName);
 		response.setFixedDelayMilliseconds(fixedDelayMilliseconds);
+		response.setDelayDistribution(delayDistribution);
 		response.setProxyBaseUrl(proxyBaseUrl);
 		response.setFault(fault);
 		response.setTransformers(responseTransformerNames);
